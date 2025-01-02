@@ -1,11 +1,11 @@
-import { useContext, useEffect, useRef } from "react";
+import { useContext, useEffect, useRef, useState } from "react";
 import { CartContext } from "../store/CartContext";
 import { currencyFormatter } from "../utils/formatter";
 import Modal from "./Modal";
 import UserProgressContext from "../store/ProgressTrackerContext";
 import Input from './Input.jsx';
 import { Button } from './Button.jsx';
-import { useActionState } from "react";
+import { usePostOrders } from "../Hooks/fetch.js";
 
 export default function Checkout() {
     const cartCtx = useContext(CartContext);
@@ -19,33 +19,42 @@ export default function Checkout() {
         }
     }, [progressCtx.progress])
 
-    const [ message, formAction, isPending] = useActionState(submitForm, null);
 
     function handleCancel() {
         modalRef.current.close();
         progressCtx.hideCheckout();
     }
+    const {post} = usePostOrders();
 
-    function submitForm(prevState, formData) { 
-         
+    function submitForm(event) {
+        event.preventDefault();
+        let formData = new FormData(event.target);
+        let allEntries = Object.fromEntries(formData.entries());
+        console.log(allEntries)
+        post({
+            order: {
+                items: cartCtx.items,
+                customer: allEntries
+            }
+        })
     }
 
     return (
-        <Modal ref={modalRef}>
-            <form action={formAction}>
+        <Modal ref={modalRef} open={progressCtx.progress == 'checkout'}>
+            <form onSubmit={submitForm}>
                 <h2>Checkout:</h2>
                 <p>Total Amount to be paid. -  {currencyFormatter.format(totalAmount)}</p>
 
                 <Input id='name' label='Full Name' />
-                <Input id='name' label='Email Address' />
-                <Input id='name' label='Street' />
+                <Input id='email' label='Email Address' />
+                <Input id='street' label='Street' />
                 <div className="control-row">
-                    <Input id='name' label='Postal code' />
-                    <Input id='name' label='City' />
+                    <Input id='postal-code' label='Postal code' />
+                    <Input id='city' label='City' />
                 </div>
                 <p className="modal-actions">
                     <Button textOnly type='button' onClick={handleCancel}>Cancel</Button>
-                    <Button type='submit' disabled={isPending}>{isPending ? 'Submitting:' : 'Submit'}</Button>
+                    <Button type='submit'>Submit</Button>
                 </p>
             </form>
         </Modal>

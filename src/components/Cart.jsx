@@ -34,7 +34,7 @@ function CartItem({ cartItem }) {
                 <p>{cartItem.name} - {cartItem.quantity}</p>
                 <p className="cart-item-actions">
                     <button onClick={handleAddItem}>+</button>
-                    <p>{cartItem.quantity}</p>
+                    <span>{cartItem.quantity}</span>
                     <button onClick={handleRemoveItem}>-</button>
                 </p>
             </div>

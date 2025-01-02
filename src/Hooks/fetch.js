@@ -23,22 +23,40 @@ import { useEffect, useState } from "react";
 //   return meals; // Return the state directly
 // }
 
-export function useFetchMeals(){
+export function useFetchMeals() {
 
     let [meals, setMeals] = useState([]);
 
-    useEffect(()=>{
-        async function fetchMeal(){
-            try{
-                let response = await fetch("http://localhost:3000/meals",{method:'GET'}).then(res=> res.json());
+    useEffect(() => {
+        async function fetchMeal() {
+            try {
+                let response = await fetch("http://localhost:3000/meals", { method: 'GET' }).then(res => res.json());
                 setMeals(response);
             }
-            catch(err){
+            catch (err) {
                 console.error(err)
             }
         }
         fetchMeal();
-    },[])
+    }, [])
 
     return meals;
+}
+
+export function usePostOrders() {
+     const post =   async function fetchOrders(requestBody) {
+            try {
+                await fetch("http://localhost:3000/orders",
+                 { method: 'POST', 
+                    body: JSON.stringify(
+                        requestBody
+                    ), 
+                    headers: { 'Content-Type' : 'application/json'}})
+                    .then(res => res.json());
+            }
+            catch (err) {
+                console.error(err)
+            }
+        }
+    return {post}
 }
