@@ -1,16 +1,18 @@
+import Checkout from "./components/Checkout.jsx";
 import Header from "./components/Header.jsx";
 import Meals from "./components/Meals.jsx";
 import { CartContextProvider } from './store/CartContext.jsx';
-import { ProgressTrackerContextProvider } from "./store/ProgressTrackerContext.jsx";
+import { UserProgressContextProvider } from "./store/ProgressTrackerContext.jsx";
 
 function App() {
   return (
-    <ProgressTrackerContextProvider>
+    <UserProgressContextProvider>
       <CartContextProvider>
         <Header />
         <Meals />
+        <Checkout/>
       </CartContextProvider>
-    </ProgressTrackerContextProvider>
+    </UserProgressContextProvider>
   );
 }
 

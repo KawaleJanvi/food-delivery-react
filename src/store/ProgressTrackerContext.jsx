@@ -1,51 +1,45 @@
-import { createContext, useReducer } from "react";
+import { createContext, useState } from 'react';
 
-export const ProgressTrackerContext = createContext({
-    progress: 'checkout',
-    hideCheckout: () => { },
-    showCheckout: () => { },
-    hideUserDetails: () => { },
-    showUserDetails: () => { }
+const UserProgressContext = createContext({
+  progress: '', // 'cart', 'checkout'
+  showCart: () => {},
+  hideCart: () => {},
+  showCheckout: () => {},
+  hideCheckout: () => {},
 });
 
-function progressTrackerReducer(progressState, progressAction) {
-    switch (progressAction.type) {
-        case 'HIDE_CHECK': progressState.progress='user';break;
-        case 'HIDE_USER': progressState.progress='checkout';break;
-        case 'SHOW_CHECK': progressState.progress='checkout';break;
-        case 'SHOW_USER': progressState.progress='user';break;
-    }
+export function UserProgressContextProvider({ children }) {
+  const [userProgress, setUserProgress] = useState('');
+
+  function showCart() {
+    setUserProgress('cart');
+  }
+
+  function hideCart() {
+    setUserProgress('');
+  }
+
+  function showCheckout() {
+    setUserProgress('checkout');
+  }
+
+  function hideCheckout() {
+    setUserProgress('');
+  }
+
+  const userProgressCtx = {
+    progress: userProgress,
+    showCart,
+    hideCart,
+    showCheckout,
+    hideCheckout,
+  };
+
+  return (
+    <UserProgressContext.Provider value={userProgressCtx}>
+      {children}
+    </UserProgressContext.Provider>
+  );
 }
 
-export function ProgressTrackerContextProvider({ children }) {
-    const [progressState, progressActionDispatch] = useReducer(progressTrackerReducer, { progress: 'checkout' })
-
-    function hideCheckout(){
-        progressActionDispatch({type: 'HIDE_CHECK'});
-    }
-
-    function showCheckout(){
-        progressActionDispatch({type: 'SHOW_CHECK'});
-    }
-
-    function hideUserDetails(){
-        progressActionDispatch({type: 'HIDE_USER'});
-    }
-
-    function showUserDetails(){
-        progressActionDispatch({type: 'SHOW_USER'});
-    }
-
-    const progressCtx = {
-        progress: progressState,
-        hideCheckout,
-        showCheckout,
-        hideUserDetails,
-        showUserDetails
-    }
-    return (
-        <ProgressTrackerContext.Provider value = {progressCtx}>
-            {children}
-        </ProgressTrackerContext.Provider>
-    )
-}
+export default UserProgressContext;
