@@ -1,8 +1,8 @@
-go to: cd Project location/backend
-        run npm install
-        run npm start
-
-open another terminal or bash
-got to: cd location
-        npm install
-        npm run dev or npm dev
+go to:<br/> cd Project location/backend<br/>
+        run npm install <br/>
+        run npm start<br/>
+<br/><br/><br/>
+open another terminal or bash<br/><br/><br/>
+got to:<br/> cd location<br/>
+        npm install<br/><br/>
+        npm run dev or npm dev<br/>
