@@ -9,7 +9,7 @@ import { usePostOrders } from "../Hooks/fetch.js";
 
 export default function Checkout() {
     const cartCtx = useContext(CartContext);
-    let totalAmount = cartCtx.items.reduce((total, currentItem) => total + currentItem, 0);
+    let totalAmount = cartCtx.items.reduce((total, currentItem) => total + currentItem.price, 0);
     const progressCtx = useContext(UserProgressContext);
     let modalRef = useRef();
 
@@ -24,19 +24,19 @@ export default function Checkout() {
         modalRef.current.close();
         progressCtx.hideCheckout();
     }
-    const {post} = usePostOrders();
+    const { post } = usePostOrders();
 
     function submitForm(event) {
         event.preventDefault();
         let formData = new FormData(event.target);
         let allEntries = Object.fromEntries(formData.entries());
-        console.log(allEntries)
         post({
             order: {
                 items: cartCtx.items,
                 customer: allEntries
             }
-        })
+        });
+        progressCtx.hideCheckout();
     }
 
     return (

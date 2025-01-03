@@ -46,7 +46,7 @@ export function useFetchMeals() {
 export function usePostOrders() {
      const post =   async function fetchOrders(requestBody) {
             try {
-                await fetch("http://localhost:3000/orders",
+              await fetch("http://localhost:3000/orders",
                  { method: 'POST', 
                     body: JSON.stringify(
                         requestBody
@@ -56,7 +56,7 @@ export function usePostOrders() {
             }
             catch (err) {
                 console.error(err)
-            }
+            }           
         }
-    return {post}
+    return { post }
 }
