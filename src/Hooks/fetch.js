@@ -54,8 +54,14 @@ export function useFetchMeals() {
 
 export function usePostOrders() {
     let [error, setError] = useState('')
+    let [loading, setloading] = useState(false);
+    let [data, setData] = useState();
+    function clearData(){
+        setData(undefined);
+    }
     const post = async function fetchOrders(requestBody) {
         try {
+            setloading(prev => !prev)
             let response = await fetch("http://localhost:3000/orders",
                 {
                     method: 'POST',
@@ -67,14 +73,19 @@ export function usePostOrders() {
 
             if (!response.ok) {
                 setError(err)
+                setloading(false);
                 throw new Error(err);
+            }else{
+                setData(response.json())
             }
         }
         catch (err) {
             console.error(err)
             setError(err)
+            setloading(false);
             throw new Error(err);
         }
+        setloading(false);
     }
-    return { post, error }
+    return { post, data, error, loading, clearData }
 }

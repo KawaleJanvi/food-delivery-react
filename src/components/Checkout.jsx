@@ -23,8 +23,9 @@ export default function Checkout() {
     function handleCancel() {
         modalRef.current.close();
         progressCtx.hideCheckout();
+        clearData();
     }
-    const { post, error } = usePostOrders();
+    const { post, data, error, loading, clearData } = usePostOrders();
 
     function submitForm(event) {
         event.preventDefault();
@@ -36,7 +37,7 @@ export default function Checkout() {
                 customer: allEntries
             }
         });
-        progressCtx.hideCheckout();
+        // progressCtx.hideCheckout();
     }
 
     if (error) {
@@ -44,8 +45,17 @@ export default function Checkout() {
             <p>{error.message}</p>
         </div>
     }
+    if (!error && data) {
+        return <Modal open={progressCtx.progress == 'checkout'} ref={modalRef} close={handleCancel}>
+            <h2>Your Order was submitted</h2>
+            <p>we will get back to you with mored details via email within next few minutes.</p>
+            <p className="modal-actions">
+                <Button textOnly onClick={handleCancel}>Close</Button>
+            </p>
+        </Modal>
+    }
     return (
-        <Modal ref={modalRef} open={progressCtx.progress == 'checkout'}>
+        <Modal open={progressCtx.progress == 'checkout'}>
             <form onSubmit={submitForm}>
                 <h2>Checkout:</h2>
                 <p>Total Amount to be paid. -  {currencyFormatter.format(totalAmount)}</p>
@@ -58,8 +68,8 @@ export default function Checkout() {
                     <Input id='city' label='City' />
                 </div>
                 <p className="modal-actions">
-                    <Button textOnly type='button' onClick={handleCancel}>Cancel</Button>
-                    <Button type='submit'>Submit</Button>
+                    {loading ? ' Submitting ....' : <><Button textOnly type='button' onClick={handleCancel}>Cancel</Button>
+                        <Button type='submit'>Submit</Button></>}
                 </p>
             </form>
         </Modal>

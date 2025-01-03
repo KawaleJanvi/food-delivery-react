@@ -31,7 +31,7 @@ function CartItem({ cartItem }) {
     return (
         <li key={cartItem.id}>
             <div className="cart-item">
-                <p>{cartItem.name} - {cartItem.quantity}</p>
+                <p>{cartItem.name} - {currencyFormatter.format(cartItem.price)} {cartItem.quantity > 1 && 'X ' + cartItem.quantity} </p>
                 <p className="cart-item-actions">
                     <button onClick={handleAddItem}>+</button>
                     <span>{cartItem.quantity}</span>
