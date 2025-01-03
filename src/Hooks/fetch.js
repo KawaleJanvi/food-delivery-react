@@ -26,37 +26,55 @@ import { useEffect, useState } from "react";
 export function useFetchMeals() {
 
     let [meals, setMeals] = useState([]);
+    let [error, setError] = useState('')
 
     useEffect(() => {
         async function fetchMeal() {
             try {
-                let response = await fetch("http://localhost:3000/meals", { method: 'GET' }).then(res => res.json());
-                setMeals(response);
+                const response = await fetch("http://localhost:3000/meals", { method: "GET" });
+
+                if (!response.ok) {
+                    setError(response.statusText)
+                    throw new Error(`Error: ${response.statusText}`);
+                }
+
+                const responseData = await response.json();
+                setMeals(responseData);
             }
             catch (err) {
-                console.error(err)
+                setError(err)
             }
+
         }
         fetchMeal();
     }, [])
 
-    return meals;
+    return { meals, error };
 }
 
 export function usePostOrders() {
-     const post =   async function fetchOrders(requestBody) {
-            try {
-              await fetch("http://localhost:3000/orders",
-                 { method: 'POST', 
+    let [error, setError] = useState('')
+    const post = async function fetchOrders(requestBody) {
+        try {
+            let response = await fetch("http://localhost:3000/orders",
+                {
+                    method: 'POST',
                     body: JSON.stringify(
                         requestBody
-                    ), 
-                    headers: { 'Content-Type' : 'application/json'}})
-                    .then(res => res.json());
+                    ),
+                    headers: { 'Content-Type': 'application/json' }
+                })
+
+            if (!response.ok) {
+                setError(err)
+                throw new Error(err);
             }
-            catch (err) {
-                console.error(err)
-            }           
         }
-    return { post }
+        catch (err) {
+            console.error(err)
+            setError(err)
+            throw new Error(err);
+        }
+    }
+    return { post, error }
 }

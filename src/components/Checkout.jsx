@@ -24,7 +24,7 @@ export default function Checkout() {
         modalRef.current.close();
         progressCtx.hideCheckout();
     }
-    const { post } = usePostOrders();
+    const { post, error } = usePostOrders();
 
     function submitForm(event) {
         event.preventDefault();
@@ -39,6 +39,11 @@ export default function Checkout() {
         progressCtx.hideCheckout();
     }
 
+    if (error) {
+        return <div>
+            <p>{error.message}</p>
+        </div>
+    }
     return (
         <Modal ref={modalRef} open={progressCtx.progress == 'checkout'}>
             <form onSubmit={submitForm}>
